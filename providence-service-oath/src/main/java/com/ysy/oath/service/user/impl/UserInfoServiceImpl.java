@@ -5,8 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.surpassm.common.jackson.Result;
 import com.github.surpassm.common.jackson.ResultCode;
 import com.github.surpassm.common.tool.util.ValidateUtil;
-import com.liaoin.demo.entity.user.*;
-import com.liaoin.demo.mapper.user.*;
 import com.ysy.oath.entity.user.*;
 import com.ysy.oath.mapper.user.*;
 import com.ysy.oath.security.BeanConfig;

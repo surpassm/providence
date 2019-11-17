@@ -4,8 +4,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.surpassm.common.jackson.Result;
 import com.github.surpassm.common.jackson.ResultCode;
-import com.liaoin.demo.entity.user.*;
-import com.liaoin.demo.mapper.user.*;
 import com.ysy.oath.entity.user.*;
 import com.ysy.oath.mapper.user.*;
 import com.ysy.oath.security.BeanConfig;
@@ -38,8 +36,6 @@ public class GroupServiceImpl implements GroupService {
 	private GroupMapper groupMapper;
 	@Resource
 	private BeanConfig beanConfig;
-	@Resource
-	private GroupMenuMapper groupMenuMapper;
 	@Resource
 	private GroupRoleMapper groupRoleMapper;
 	@Resource
@@ -125,11 +121,6 @@ public class GroupServiceImpl implements GroupService {
 		if (groupCount != 0){
 			return fail("存在下级关联数据无法删除");
 		}
-		//组权限查询
-		GroupMenu groupMenu = GroupMenu.builder().groupId(id).build();
-		groupMenu.setIsDelete(0);
-		int groupMenuCount = groupMenuMapper.selectCount(groupMenu);
-		CommonImpl.groupMenuDeleteUpdata(loginUserInfo, groupMenu, groupMenuCount, groupMenuMapper);
 		//组角色查询
 		GroupRole groupRole = GroupRole.builder().groupId(id).build();
 		groupRole.setIsDelete(0);
@@ -213,18 +204,6 @@ public class GroupServiceImpl implements GroupService {
 		if (groupCount == 0){
 			return fail(ResultCode.RESULE_DATA_NONE.getMsg());
 		}
-		//删除原有组对应的权限
-		Example.Builder builder = new Example.Builder(RoleMenu.class);
-		builder.where(WeekendSqls.<GroupMenu>custom().andEqualTo(GroupMenu::getIsDelete, 0));
-		builder.where(WeekendSqls.<GroupMenu>custom().andEqualTo(GroupMenu::getGroupId, id));
-		groupMenuMapper.deleteByExample(builder.build());
-		//新增现有的角色权限
-		for(String split : splits){
-			GroupMenu build = GroupMenu.builder().groupId(id).menuId(Long.valueOf(split)).build();
-			build.setIsDelete(0);
-			build.setMenuType(1);
-			groupMenuMapper.insert(build);
-		}
 		return ok();
 	}
 
@@ -258,18 +237,19 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public Result findGroupToMenu(String accessToken, Long groupId, Integer page, Integer size, String sort) {
 		//根据组查询有所权限列表ID
-		List<GroupMenu> select = groupMenuMapper.select(GroupMenu.builder().groupId(groupId).isDelete(0).build());
-		if (select.size() == 0){
-			return Result.ok(new Page<>());
-		}
-		page = null == page ? 1 : page;
-		size = null == size ? 10 : size;
-		PageHelper.startPage(page, size);
-		Example.Builder builder = new Example.Builder(Menu.class);
-		builder.where(WeekendSqls.<Menu>custom().andEqualTo(Menu::getIsDelete, 0));
-		builder.where(WeekendSqls.<Menu>custom().andIn(Menu::getId, select));
-		Page<Menu> all = (Page<Menu>) menuMapper.selectByExample(builder.build());
-		return ok(all.toPageInfo());
+//		List<GroupMenu> select = groupMenuMapper.select(GroupMenu.builder().groupId(groupId).isDelete(0).build());
+//		if (select.size() == 0){
+//			return Result.ok(new Page<>());
+//		}
+//		page = null == page ? 1 : page;
+//		size = null == size ? 10 : size;
+//		PageHelper.startPage(page, size);
+//		Example.Builder builder = new Example.Builder(Menu.class);
+//		builder.where(WeekendSqls.<Menu>custom().andEqualTo(Menu::getIsDelete, 0));
+//		builder.where(WeekendSqls.<Menu>custom().andIn(Menu::getId, select));
+//		Page<Menu> all = (Page<Menu>) menuMapper.selectByExample(builder.build());
+//		return ok(all.toPageInfo());
+		return null;
 	}
 
 	@Override

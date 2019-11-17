@@ -8,6 +8,7 @@ import com.github.surpassm.config.annotation.AuthorizationToken;
 import com.ysy.oath.entity.user.UserInfo;
 import com.ysy.oath.service.user.UserInfoService;
 import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.concurrent.Callable;
 
 /**
   * @author mc
@@ -22,6 +24,7 @@ import javax.validation.constraints.NotNull;
   * Version 1.0
   * Description 控制层
   */
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/userInfo/")
@@ -43,6 +46,7 @@ public class UserInfoController {
 			return Result.fail(errors.getAllErrors());
 		}
         return userInfoService.insert(accessToken,userInfo);
+
     }
 
     @PostMapping("v1/update")
@@ -129,9 +133,18 @@ public class UserInfoController {
 	@ApiResponses({@ApiResponse(code=Constant.FAIL_SESSION_CODE,message=Constant.FAIL_SESSION_MSG),
 			@ApiResponse(code=Constant.SUCCESS_CODE,message=Constant.SUCCESS_MSG),
 			@ApiResponse(code=Constant.FAIL_CODE,message=Constant.FAIL_MSG,response=Result.class)})
-	public Result setUserByRoles(@ApiParam(hidden = true)@AuthorizationToken String accessToken,
+	public Callable setUserByRoles(@ApiParam(hidden = true)@AuthorizationToken String accessToken,
 								 @ApiParam(value = "用户系统标识",required = true)@RequestParam(value = "id")@NotNull Long id,
 								 @ApiParam(value = "角色系统标识 多个权限请使用 ，分割",required = true)@RequestParam(value = "roleIds")@NotEmpty String roleIds) {
-		return userInfoService.setUserByRoles(accessToken,id,roleIds);
+		log.info("主线程开始");
+		Callable callable = () -> {
+			log.info("副线程开始");
+			Result result = userInfoService.setUserByRoles(accessToken,id,roleIds);
+			log.info("副线程返回");
+			return result;
+		};
+		log.info("主线程返回");
+		return callable ;
+
 	}
 }

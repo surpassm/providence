@@ -7,7 +7,6 @@ import com.github.surpassm.common.jackson.ResultCode;
 import com.ysy.oath.entity.user.Department;
 import com.ysy.oath.entity.user.UserInfo;
 import com.ysy.oath.mapper.user.DepartmentMapper;
-import com.ysy.oath.mapper.user.RegionMapper;
 import com.ysy.oath.mapper.user.UserInfoMapper;
 import com.ysy.oath.security.BeanConfig;
 import com.ysy.oath.service.user.DepartmentService;
@@ -40,8 +39,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 	private BeanConfig beanConfig;
 	@Resource
 	private UserInfoMapper userInfoMapper;
-	@Resource
-	private RegionMapper regionMapper;
 	@Override
 	public Result insert(String accessToken, Department department) {
 		if (department == null) {

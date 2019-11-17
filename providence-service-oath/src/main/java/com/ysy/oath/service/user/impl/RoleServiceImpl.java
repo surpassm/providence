@@ -5,10 +5,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.surpassm.common.jackson.Result;
 import com.github.surpassm.common.jackson.ResultCode;
 import com.ysy.oath.entity.user.Role;
-import com.ysy.oath.entity.user.RoleMenu;
 import com.ysy.oath.entity.user.UserInfo;
 import com.ysy.oath.mapper.user.RoleMapper;
-import com.ysy.oath.mapper.user.RoleMenuMapper;
 import com.ysy.oath.security.BeanConfig;
 import com.ysy.oath.service.user.RoleService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,6 @@ import java.util.*;
 
 import static com.github.surpassm.common.jackson.Result.fail;
 import static com.github.surpassm.common.jackson.Result.ok;
-import static com.ysy.oath.service.user.impl.CommonImpl.roleMenuDeleteUpdata;
 
 
 /**
@@ -40,8 +37,6 @@ public class RoleServiceImpl implements RoleService {
 	private RoleMapper roleMapper;
 	@Resource
 	private BeanConfig beanConfig;
-	@Resource
-	private RoleMenuMapper roleMenuMapper;
 
 	@Override
 	public Result insert(String accessToken, Role role) {
@@ -96,11 +91,6 @@ public class RoleServiceImpl implements RoleService {
 		}
 		UserInfo loginUserInfo = beanConfig.getAccessToken(accessToken);
 
-		RoleMenu build = RoleMenu.builder().roleId(id).build();
-		build.setIsDelete(0);
-		int roleMenuCount = roleMenuMapper.selectCount(build);
-		//角色权限查询
-		roleMenuDeleteUpdata(loginUserInfo, build, roleMenuCount, roleMenuMapper);
 
 		role.setIsDelete(1);
 		roleMapper.updateByPrimaryKeySelective(role);
@@ -173,18 +163,6 @@ public class RoleServiceImpl implements RoleService {
 		int roleCount = roleMapper.selectCount(role);
 		if (roleCount == 0){
 			return fail(ResultCode.RESULE_DATA_NONE.getMsg());
-		}
-		//删除原有角色对应的权限
-		Example.Builder builder = new Example.Builder(RoleMenu.class);
-		builder.where(WeekendSqls.<RoleMenu>custom().andEqualTo(RoleMenu::getIsDelete, 0));
-		builder.where(WeekendSqls.<RoleMenu>custom().andEqualTo(RoleMenu::getRoleId, id));
-		roleMenuMapper.deleteByExample(builder.build());
-		//新增现有的角色权限
-		for(String menui : splits){
-			RoleMenu build = RoleMenu.builder().roleId(id).menuId(Long.valueOf(menui)).build();
-			build.setIsDelete(0);
-			build.setMenuType(1);
-			roleMenuMapper.insert(build);
 		}
 
 		return ok();

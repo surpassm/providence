@@ -13,11 +13,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * @author mc
- * Create date 2019/3/14 18:06
+ * Create date 2019/11/17 20:18
  * Version 1.0
  * Description
  */
@@ -27,15 +26,11 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@SuppressWarnings("serial")
-@ApiModel(value = "组权限")
+@ApiModel(value = "权限与API接口关联表")
 @NameStyle(Style.camelhump)
-@Table(name = "m_group_menu")
-@org.hibernate.annotations.Table(appliesTo = "m_group_menu", comment = "组权限")
-public class GroupMenu implements Serializable {
-
-
-
+@Table(name = "t_power_operation")
+@org.hibernate.annotations.Table(appliesTo = "t_power_operation", comment = "权限与API接口关联表")
+public class PowerOperation {
 	@Id
 	@Min(0)
 	@KeySql(useGeneratedKeys = true)
@@ -45,17 +40,16 @@ public class GroupMenu implements Serializable {
 	@NotNull(groups = UpdateView.class,message = "参数不能为空")
 	private Long id;
 
-	@ApiModelProperty(value="组系统标识",example = "1")
-	@ManyToOne(targetEntity = Group.class)
-	@JoinColumn(name = "group_id", referencedColumnName = "id")
-	@NotNull(groups = {InsertView.class,UpdateView.class},message = "参数不能为为空")
-	private Long groupId;
-
 	@ApiModelProperty(value="权限系统标识",example = "1")
-	@ManyToOne(targetEntity = Menu.class)
-	@JoinColumn(name = "menu_id", referencedColumnName = "id")
+	@ManyToOne(targetEntity = Power.class)
+	@JoinColumn(name = "power_id", referencedColumnName = "id")
 	@NotNull(groups = {InsertView.class,UpdateView.class},message = "参数不能为为空")
-	private Long menuId;
+	private Long powerId;
+	@ApiModelProperty(value="页面元素系统标识",example = "1")
+	@ManyToOne(targetEntity = Operation.class)
+	@JoinColumn(name = "operation_id", referencedColumnName = "id")
+	@NotNull(groups = {InsertView.class,UpdateView.class},message = "参数不能为为空")
+	private Long operationId;
 
 	@Min(0)
 	@Max(1)
@@ -63,9 +57,4 @@ public class GroupMenu implements Serializable {
 	@Column(columnDefinition="int(1) COMMENT '权限类型'",nullable = false)
 	@NotNull(groups = {InsertView.class,UpdateView.class},message = "参数不能为为空")
 	private Integer menuType;
-
-	@Min(0)
-	@Max(1)
-	@ApiModelProperty(value = "是否删除",hidden = true)
-	private Integer isDelete;
 }

@@ -4,11 +4,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.surpassm.common.jackson.Result;
 import com.github.surpassm.common.jackson.ResultCode;
-import com.liaoin.demo.entity.user.*;
 import com.ysy.oath.entity.user.*;
 import com.ysy.oath.mapper.user.GroupMenuMapper;
 import com.ysy.oath.mapper.user.MenuMapper;
-import com.ysy.oath.mapper.user.RoleMenuMapper;
 import com.ysy.oath.mapper.user.UserMenuMapper;
 import com.ysy.oath.security.BeanConfig;
 import com.ysy.oath.service.user.MenuService;
@@ -25,7 +23,6 @@ import java.util.*;
 
 import static com.github.surpassm.common.jackson.Result.fail;
 import static com.github.surpassm.common.jackson.Result.ok;
-import static com.ysy.oath.service.user.impl.CommonImpl.groupMenuDeleteUpdata;
 
 
 /**
@@ -133,16 +130,6 @@ public class MenuServiceImpl implements MenuService {
 			return fail("存在下级关联数据无法删除");
 		}
 		
-		//组权限查询
-		GroupMenu groupMenu = GroupMenu.builder().menuId(id).build();
-		groupMenu.setIsDelete(0);
-		int groupMenuCount = groupMenuMapper.selectCount(groupMenu);
-		groupMenuDeleteUpdata(loginUserInfo,groupMenu,groupMenuCount,groupMenuMapper);
-		//角色权限查询
-		RoleMenu roleMenu = RoleMenu.builder().menuId(id).build();
-		roleMenu.setIsDelete(0);
-		int roleMenuCount = roleMenuMapper.selectCount(roleMenu);
-		CommonImpl.roleMenuDeleteUpdata(loginUserInfo, roleMenu, roleMenuCount, roleMenuMapper);
 		//用户权限查询
 		UserMenu userMenu = UserMenu.builder().menuId(id).build();
 		userMenu.setIsDelete(0);
@@ -196,9 +183,6 @@ public class MenuServiceImpl implements MenuService {
 			}
 			if (menu.getParentId() != null) {
 				builder.where(WeekendSqls.<Menu>custom().andEqualTo(Menu::getParentId, menu.getParentId()));
-			}
-			if (menu.getPath() != null && !"".equals(menu.getPath().trim())) {
-				builder.where(WeekendSqls.<Menu>custom().andLike(Menu::getPath, "%" + menu.getPath() + "%"));
 			}
 			if (menu.getType() != null) {
 				builder.where(WeekendSqls.<Menu>custom().andEqualTo(Menu::getType, menu.getType()));
