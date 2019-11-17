@@ -10,6 +10,7 @@ import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.code.Style;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -44,4 +45,8 @@ public class Power {
 	@Column(columnDefinition="varchar(255) COMMENT '名称'")
 	@NotBlank(groups = {InsertView.class, UpdateView.class},message = "参数不能为为空或空串")
 	private String name;
+	@Min(0)
+	@Max(1)
+	@ApiModelProperty(value = "是否删除",hidden = true)
+	private Integer isDelete;
 }

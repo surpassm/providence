@@ -2,8 +2,10 @@ package com.ysy.oath.config;
 
 import com.github.surpassm.security.properties.SecurityProperties;
 import com.ysy.oath.entity.user.Menu;
+import com.ysy.oath.entity.user.Operations;
 import com.ysy.oath.mapper.user.MenuMapper;
 import com.spring4all.swagger.SwaggerProperties;
+import com.ysy.oath.mapper.user.OperationsMapper;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,7 @@ public class ApplicationRunnerConfig implements ApplicationRunner {
 	@Resource
 	private DocumentationCache documentationCache;
 	@Resource
-	private MenuMapper menuMapper;
+	private OperationsMapper operationsMapper;
 	@Resource
 	private SecurityProperties securityProperties;
 	@Resource
@@ -67,20 +69,20 @@ public class ApplicationRunnerConfig implements ApplicationRunner {
 								// 描述
 								String description = value.getPost().getTags().get(0);
 								// 权限
-								Menu build = Menu.builder().name(description).build();
+								Operations build = Operations.builder().name(description).build();
 								build.setIsDelete(0);
-								Menu menu = menuMapper.selectOne(build);
-								menuInsertAndUpdata(url, name, description, menu);
+								Operations operations = operationsMapper.selectOne(build);
+								menuInsertAndUpdata(url, name, description, operations);
 							}
 							if (value.getGet() != null) {
 								String name = value.getGet().getSummary();
 								// 描述
 								String description = value.getGet().getTags().get(0);
 								// 权限
-								Menu build = Menu.builder().name(description).build();
+								Operations build = Operations.builder().name(description).build();
 								build.setIsDelete(0);
-								Menu menu = menuMapper.selectOne(build);
-								menuInsertAndUpdata(url, name, description, menu);
+								Operations operations = operationsMapper.selectOne(build);
+								menuInsertAndUpdata(url, name, description, operations);
 							}
 						}
 					});
@@ -88,38 +90,38 @@ public class ApplicationRunnerConfig implements ApplicationRunner {
 			}
 		}
 	}
-	private void menuInsertAndUpdata(String url, String name, String description, Menu menu) {
-		if (menu == null){
+	private void menuInsertAndUpdata(String url, String name, String description, Operations operations) {
+		if (operations == null){
 			//新增父级
-			Menu parentMenu = Menu.builder()
+			Operations parentOperations = Operations.builder()
 					.name(description)
 					.type(1)
 					.build();
-			parentMenu.setIsDelete(0);
-			menuMapper.insert(parentMenu);
+			parentOperations.setIsDelete(0);
+			operationsMapper.insert(parentOperations);
 			//在添加当前url为子级
-			Menu menuBuild = Menu.builder()
-					.menuUrl(url)
-					.parentId(parentMenu.getId())
+			Operations operationBuild = Operations.builder()
+					.apiUrl(url)
+					.parentId(parentOperations.getId())
 					.describes(name)
 					.type(1)
 					.build();
-			menuBuild.setIsDelete(0);
-			menuMapper.insert(menuBuild);
+			operationBuild.setIsDelete(0);
+			operationsMapper.insert(operationBuild);
 		}else {
-			Menu build = Menu.builder().menuUrl(url).build();
+			Operations build = Operations.builder().apiUrl(url).build();
 			build.setIsDelete(0);
-			int selectCount = menuMapper.selectCount(build);
+			int selectCount = operationsMapper.selectCount(build);
 			if (selectCount == 0){
 				//去除重复数据
-				Menu menuBuild = Menu.builder()
-						.menuUrl(url)
+				Operations operationBuild = Operations.builder()
+						.apiUrl(url)
 						.type(1)
-						.parentId(menu.getId())
+						.parentId(operations.getId())
 						.describes(name)
 						.build();
-				menuBuild.setIsDelete(0);
-				menuMapper.insert(menuBuild);
+				operationBuild.setIsDelete(0);
+				operationsMapper.insert(operationBuild);
 			}
 		}
 	}
