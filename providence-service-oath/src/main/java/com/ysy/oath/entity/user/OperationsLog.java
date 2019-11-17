@@ -34,25 +34,25 @@ public class OperationsLog {
 	@KeySql(useGeneratedKeys = true)
 	@Column(columnDefinition="bigint COMMENT '系统标识'")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(value = "系统标识", position = 1, example = "1")
+	@ApiModelProperty(value = "系统标识")
 	private Long id;
 
-	@ApiModelProperty(value = "模块", position = 2, example = "用户管理")
+	@ApiModelProperty(value = "模块")
 	private String module;
-	@ApiModelProperty(value = "功能", position = 3, example = "新增")
+	@ApiModelProperty(value = "功能")
 	private String function;
-	@ApiModelProperty(value = "接口", position = 4, example = "/user/insert")
+	@ApiModelProperty(value = "接口")
 	private String uri;
 	@Lob
-	@ApiModelProperty(value = "数据", position = 5)
+	@ApiModelProperty(value = "数据")
 	private String data;
-	@ApiModelProperty(value = "客户端IP", position = 6)
+	@ApiModelProperty(value = "客户端IP")
 	private String clientIp;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@ApiModelProperty(value = "操作开始时间", position = 7)
+	@ApiModelProperty(value = "操作开始时间")
 	private LocalDateTime operateStartTime;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@ApiModelProperty(value = "操作结束时间", position = 8)
+	@ApiModelProperty(value = "操作结束时间")
 	private LocalDateTime operateEndTime;
 
 	@ManyToOne(targetEntity = UserInfo.class)
