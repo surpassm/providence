@@ -1,0 +1,130 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: providence-service-oath
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  datasource:
+    url: jdbc:mysql://localhost:3306/oath?serverTimezone=Hongkong&useSSL=false&useUnicode=true&characterEncoding=UTF-8&nullCatalogMeansCurrent=true
+    hikari:
+      username: root
+      password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    database: 2
+    host: localhost
+    port: 6379
+    password:
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: -1
+        # 连接池最大阻塞等待时间（使用负值表示没有限制
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 0
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    database: mysql
+    properties:
+      hibernate:
+        format_sql: false
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+  session:
+    store-type: none
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+surpassm:
+  security:
+    enabled: true
+    oauth2:
+      clients[0]:
+        clientId: user_1
+        clientIdSecret: 123456
+        #成功token时长 过期时间默认24小时
+        access-token-validity-seconds: 86400
+        #刷新token时长 过期时间默认30天
+        refresh-token-validity-seconds: 2592000
+      clients[1]:
+        clientId: user_2
+        clientIdSecret: 123456
+        #成功token时长 过期时间默认24小时
+        access-token-validity-seconds: 86400
+        #刷新token时长 过期时间默认30天
+        refresh-token-validity-seconds: 2592000
+    login-type: JSON
+#      登陆页面设置
+    no-verify[0]: /swagger-**
+    no-verify[1]: /images/**
+    no-verify[2]: /webjars/**
+    no-verify[3]: /v2/api-docs**
+    no-verify[4]: /swagger-resources**
+    no-verify[5]: /error**
+    no-verify[6]: /websocket/socketServer.ws**
+    no-verify[7]: /sockjs/socketServer.ws**
+    no-verify[8]: /login/v1/auth/refreshToken**
+    no-verify[9]: /mobile/v1/auth/getPhone**
+    no-verify[10]: /fileManage/v1/auth/getFileNameUrl**
+    no-verify[11]: /fileManage/v1/auth/listUploadedFiles**
+    no-verify[12]: /fileManage/v1/auth/getPath**
+    no-verify[13]: /upload/**
+    no-verify[14]: /csrf**
+#    用户名密码登录请求处理url
+    default-login-processing-url-from: /authentication/form
+    #默认的登陆属性名称
+#    username-parameter: username
+    #登陆的密码属性名称
+#    password-parameter: password
+
+
+swagger:
+  enabled: true
+  title: "权限框架 API"
+  authorization:
+    key-name: Authorization #head对应的key
+    auth-regex: ^(?!auth).*$ #url地址中携带auth将不加入swagger token验证
+
+  docket:
+    user:
+      title: "用户"
+      base-package: com.ysy.oath.controller.user
+    common:
+      title: "公共"
+      base-package: com.ysy.oath.controller.common
+    mobile:
+      title: "移动端"
+      base-package: com.ysy.oath.controller.mobile
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+logging:
+  level:
+    com.liaoin.demo.mapper.user: trace
+
+wx:
+  miniapp:
+    configs:
+      - appid:  #微信小程序的appid
+        secret:   #微信小程序的Secret
+  pay:
+    appId:  #微信公众号或者小程序等的appid
+    mchId:  #微信支付商户号
+    mchKey:  #微信支付商户密钥
+    subAppId: #服务商模式下的子商户公众账号ID
+    subMchId: #服务商模式下的子商户号
+    keyPath: # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）

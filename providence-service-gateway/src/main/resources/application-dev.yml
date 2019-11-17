@@ -1,0 +1,12 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: providence-service-gateway
+  main:
+    allow-bean-definition-overriding: true # 现的bean会覆盖之前相同名称的bean
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
