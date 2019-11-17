@@ -28,8 +28,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @ApiModel(value = "权限与角色关联表")
 @NameStyle(Style.camelhump)
-@Table(name = "t_power_role")
-@org.hibernate.annotations.Table(appliesTo = "t_power_role", comment = "权限与角色关联表")
+@Table(name = "m_role_power")
+@org.hibernate.annotations.Table(appliesTo = "m_role_power", comment = "权限与角色关联表")
 public class RolePower {
 	@Id
 	@Min(0)

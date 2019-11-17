@@ -28,8 +28,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @ApiModel(value = "权限与菜单关联表")
 @NameStyle(Style.camelhump)
-@Table(name = "t_power_menu")
-@org.hibernate.annotations.Table(appliesTo = "t_power_menu", comment = "权限与菜单关联表")
+@Table(name = "m_power_menu")
+@org.hibernate.annotations.Table(appliesTo = "m_power_menu", comment = "权限与菜单关联表")
 public class PowerMenu {
 	@Id
 	@Min(0)

@@ -28,8 +28,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @ApiModel(value = "权限与页面关联表")
 @NameStyle(Style.camelhump)
-@Table(name = "t_power_page_element")
-@org.hibernate.annotations.Table(appliesTo = "t_power_page_element", comment = "权限与页面关联表")
+@Table(name = "m_power_page_element")
+@org.hibernate.annotations.Table(appliesTo = "m_power_page_element", comment = "权限与页面关联表")
 public class PowerPageElement {
 	@Id
 	@Min(0)

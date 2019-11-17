@@ -16,7 +16,7 @@
         <result column="password" property="password" jdbcType="VARCHAR"/>
         <result column="user_info_index" property="userInfoIndex" jdbcType="INTEGER"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
-        <collection property="roles" ofType="NewsLabel" select="findByMenus" column="id"/>
+        <collection property="roles" ofType="NewsLabel" select="findByPower" column="id"/>
     </resultMap>
     <select id="selectByUserInfoAndRolesAndMenus" resultMap="BaseResultMap">
         SELECT
@@ -28,7 +28,7 @@
 
     </select>
 
-    <select id="findByMenus" resultMap="BaseResultMapFindByMenus">
+    <select id="findByPower" resultMap="BaseResultMapFindByMenus">
       select
           *
        from t_role where id =#{id}  and  is_delete = 0
@@ -49,9 +49,9 @@
           m.*
         FROM
           `t_menu` m
-          LEFT JOIN `m_role_menu` rm
-            ON m.`id` = rm.`menu_id`
-        WHERE rm.`role_id` = #{id} and m.is_delete = 0 and rm.is_delete = 0
+          LEFT JOIN `m_role_power` rm
+            ON m.`id` = rm.`power_id`
+        WHERE rm.`role_id` = #{id}
     </select>
     <resultMap id="MenuBaseResultMap" type="com.ysy.oath.entity.user.Menu">
         <id column="id" property="id" jdbcType="INTEGER"/>
@@ -62,7 +62,6 @@
         <result column="menu_url" property="menuUrl" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="parent_id" property="parentId" jdbcType="INTEGER"/>
-        <result column="path" property="path" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
         <collection property="children" ofType="NewsLabel" select="selectChildByParentId" column="id"/>
     </resultMap>
