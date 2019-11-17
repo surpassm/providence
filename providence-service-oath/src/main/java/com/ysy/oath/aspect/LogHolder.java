@@ -1,20 +1,20 @@
 package com.ysy.oath.aspect;
 
 
-import com.ysy.oath.entity.common.Log;
+import com.ysy.oath.entity.user.OperationsLog;
 
 /**
  * @author Administrator
  */
 public class LogHolder {
 
-    private static final ThreadLocal<Log> LOG_THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<OperationsLog> LOG_THREAD_LOCAL = new ThreadLocal<>();
 
-    public static void set(Log log) {
+    public static void set(OperationsLog log) {
         LOG_THREAD_LOCAL.set(log);
     }
 
-    public static Log get() {
+    public static OperationsLog get() {
         return LOG_THREAD_LOCAL.get();
     }
 

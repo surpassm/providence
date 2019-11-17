@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.surpassm.common.jackson.Result;
 import com.github.surpassm.security.properties.SecurityProperties;
-import com.ysy.oath.entity.common.Log;
+import com.ysy.oath.entity.user.OperationsLog;
 import com.ysy.oath.entity.user.UserInfo;
-import com.ysy.oath.mapper.common.LogMapper;
+import com.ysy.oath.mapper.user.OperationsLogMapper;
 import com.ysy.oath.security.BeanConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +35,7 @@ public class LogAspect {
 	@Resource
 	private ObjectMapper objectMapper;
 	@Resource
-	private LogMapper logMapper;
+	private OperationsLogMapper operationsLogMapper;
 	@Resource
 	private BeanConfig beanConfig;
 	@Resource
@@ -46,7 +46,7 @@ public class LogAspect {
 			"execution(* com.ysy.*.controller..*.delete*(..))")
 	public void setLog(JoinPoint joinPoint) {
 		// 日志
-		Log log = new Log();
+		OperationsLog log = new OperationsLog();
 		// 模块
 		Class clazz = joinPoint.getSignature().getDeclaringType();
 		if (clazz.isAnnotationPresent(Api.class)) {
@@ -109,7 +109,7 @@ public class LogAspect {
 	public void setLogData(Result result) throws JsonProcessingException {
 		if (200 == result.getCode()) {
 			// 获取日志
-			Log log = LogHolder.get();
+			OperationsLog log = LogHolder.get();
 			// 数据
 			if (result.getData() != null) {
 				String data = objectMapper.writeValueAsString(result.getData());
@@ -118,13 +118,13 @@ public class LogAspect {
 			// 操作结束时间
 			log.setOperateEndTime(LocalDateTime.now());
 			// 新增日志
-			logMapper.insert(log);
+			operationsLogMapper.insert(log);
 		}
 	}
 
-	@After("execution(* com.liaoin.*.controller..*.insert*(..)) || " +
-			"execution(* com.liaoin.*.controller..*.update*(..)) || " +
-			"execution(* com.liaoin.*.controller..*.delete*(..))")
+	@After("execution(* com.ysy.*.controller..*.insert*(..)) || " +
+			"execution(* com.ysy.*.controller..*.update*(..)) || " +
+			"execution(* com.ysy.*.controller..*.delete*(..))")
 	public void removeLog() {
 		// 从本地线程中删除日志
 		LogHolder.remove();

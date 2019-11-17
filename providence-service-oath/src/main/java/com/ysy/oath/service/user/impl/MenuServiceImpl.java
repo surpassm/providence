@@ -5,16 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.surpassm.common.jackson.Result;
 import com.github.surpassm.common.jackson.ResultCode;
 import com.ysy.oath.entity.user.*;
-import com.ysy.oath.mapper.user.GroupMenuMapper;
 import com.ysy.oath.mapper.user.MenuMapper;
-import com.ysy.oath.mapper.user.UserMenuMapper;
 import com.ysy.oath.security.BeanConfig;
 import com.ysy.oath.service.user.MenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import springfox.documentation.spring.web.DocumentationCache;
-import springfox.documentation.swagger2.mappers.ServiceModelToSwagger2Mapper;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.weekend.WeekendSqls;
 
@@ -39,16 +35,6 @@ public class MenuServiceImpl implements MenuService {
 	private MenuMapper menuMapper;
 	@Resource
 	private BeanConfig beanConfig;
-	@Resource
-	private GroupMenuMapper groupMenuMapper;
-	@Resource
-	private RoleMenuMapper roleMenuMapper;
-	@Resource
-	private UserMenuMapper userMenuMapper;
-	@Resource
-	private ServiceModelToSwagger2Mapper mapper;
-	@Resource
-	private DocumentationCache documentationCache;
 
 
 	@Override
@@ -130,11 +116,6 @@ public class MenuServiceImpl implements MenuService {
 			return fail("存在下级关联数据无法删除");
 		}
 		
-		//用户权限查询
-		UserMenu userMenu = UserMenu.builder().menuId(id).build();
-		userMenu.setIsDelete(0);
-		int userMenuCount = userMenuMapper.selectCount(userMenu);
-		CommonImpl.userMenuDeleteUpdata(loginUserInfo, userMenu, userMenuCount, userMenuMapper);
 
 		menu.setIsDelete(1);
 		menuMapper.updateByPrimaryKeySelective(menu);

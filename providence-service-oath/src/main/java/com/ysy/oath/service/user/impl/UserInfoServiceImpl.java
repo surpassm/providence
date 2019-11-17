@@ -40,8 +40,6 @@ public class UserInfoServiceImpl implements UserInfoService {
 	@Resource
 	private UserGroupMapper userGroupMapper;
 	@Resource
-	private UserMenuMapper userMenuMapper;
-	@Resource
 	private UserRoleMapper userRoleMapper;
 	@Resource
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -275,17 +273,6 @@ public class UserInfoServiceImpl implements UserInfoService {
 		int count = userInfoMapper.selectCount(UserInfo.builder().id(id).isDelete(0).build());
 		if (count == 0){
 			return fail(ResultCode.RESULE_DATA_NONE.getMsg());
-		}
-		//删除原有用户对应的权限
-		Example.Builder builder = new Example.Builder(UserMenu.class);
-		builder.where(WeekendSqls.<UserMenu>custom().andEqualTo(UserMenu::getIsDelete, 0));
-		builder.where(WeekendSqls.<UserMenu>custom().andEqualTo(UserMenu::getUserId, id));
-		userMenuMapper.deleteByExample(builder.build());
-		//新增现有的用户权限
-		for(String split: splits){
-			UserMenu build = UserMenu.builder().userId(id).menuId(Long.valueOf(split)).build();
-			build.setIsDelete(0);
-			userMenuMapper.insert(build);
 		}
 		return ok();
 	}

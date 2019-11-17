@@ -32,7 +32,7 @@ import java.util.List;
 @NameStyle(Style.camelhump)
 @Table(name = "t_operation")
 @org.hibernate.annotations.Table(appliesTo = "t_operation", comment = "后台功能接口")
-public class Operation {
+public class Operations {
 	@Id
 	@Min(0)
 	@KeySql(useGeneratedKeys = true)
@@ -76,6 +76,6 @@ public class Operation {
 
 	@Transient
 	@ApiModelProperty(value = "下级列表",hidden = true)
-	private List<Operation> children;
+	private List<Operations> children;
 
 }

@@ -13,12 +13,6 @@ import com.ysy.oath.mapper.user.*;
 public class CommonImpl {
 
 
-	static void userMenuDeleteUpdata(UserInfo loginUserInfo, UserMenu userMenu, int userMenuCount, UserMenuMapper userMenuMapper) {
-		if (userMenuCount!=0){
-			userMenu.setIsDelete(1);
-			userMenuMapper.updateByPrimaryKeySelective(userMenu);
-		}
-	}
 	static void groupRoleDeleteUpdata(UserInfo loginUserInfo, GroupRole groupRole, int groupRoleCount, GroupRoleMapper groupRoleMapper) {
 		if (groupRoleCount != 0){
 			groupRole.setIsDelete(1);

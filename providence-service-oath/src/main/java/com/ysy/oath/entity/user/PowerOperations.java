@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 @NameStyle(Style.camelhump)
 @Table(name = "t_power_operation")
 @org.hibernate.annotations.Table(appliesTo = "t_power_operation", comment = "权限与API接口关联表")
-public class PowerOperation {
+public class PowerOperations {
 	@Id
 	@Min(0)
 	@KeySql(useGeneratedKeys = true)
@@ -46,10 +46,10 @@ public class PowerOperation {
 	@NotNull(groups = {InsertView.class,UpdateView.class},message = "参数不能为为空")
 	private Long powerId;
 	@ApiModelProperty(value="页面元素系统标识",example = "1")
-	@ManyToOne(targetEntity = Operation.class)
-	@JoinColumn(name = "operation_id", referencedColumnName = "id")
+	@ManyToOne(targetEntity = Operations.class)
+	@JoinColumn(name = "operations_id", referencedColumnName = "id")
 	@NotNull(groups = {InsertView.class,UpdateView.class},message = "参数不能为为空")
-	private Long operationId;
+	private Long operationsId;
 
 	@Min(0)
 	@Max(1)
